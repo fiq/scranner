@@ -41,7 +41,8 @@ impl eframe::App for MyApp {
                 *is_scanning.lock().unwrap() = true;
                 thread::spawn(move || {
                     println!("Spawned");
-                    if let Ok(captured_packets) = scranner::sniff("enp7s0".to_string()) {
+                    if let Ok(captured_packets) = scranner::sniff("enp7s0".to_string(), 4) {
+                        println!("post scanning");
                         for packet in captured_packets {
                             println!("packet captured");
                             if !*is_scanning.lock().unwrap() {
@@ -69,7 +70,7 @@ impl eframe::App for MyApp {
             egui::ScrollArea::vertical().show(ui, |ui| {
                 ui.label("packet area");
                 for packet in self.packets.lock().unwrap().iter().rev() {
-                    println!("Got a packet");
+                    println!("Got a packet to render");
                     ui.label(packet);
                 }
             });

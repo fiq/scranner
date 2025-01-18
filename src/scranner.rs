@@ -10,7 +10,7 @@ pub struct PacketInfo {
     pub dst_port: u16,
 }
 
-pub fn sniff(ifname: String) -> Result<Vec<PacketInfo>, Box<dyn Error>> {
+pub fn sniff(ifname: String, sample_size: i32) -> Result<Vec<PacketInfo>, Box<dyn Error>> {
     println!("Sniffing interface {}", ifname);
     let interface_name_match = |iface: &NetworkInterface| iface.name == ifname;
     let interfaces = datalink::interfaces();
@@ -26,9 +26,11 @@ pub fn sniff(ifname: String) -> Result<Vec<PacketInfo>, Box<dyn Error>> {
     };
 
     let mut packets = Vec::<PacketInfo>::new();
-
-    while let Ok(packet) = rx.next() {
-        if let Some(eth_packet) = EthernetPacket::new(packet) {
+    let mut counter = 0;
+    while counter < sample_size {
+        let packet = rx.next();
+        counter +=1;
+        if let Some(eth_packet) = EthernetPacket::new(packet?) {
             println!("Captured Ethernet packet: {:?}", eth_packet);
 
             packets.push(PacketInfo {
