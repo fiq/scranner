@@ -24,7 +24,7 @@ impl eframe::App for MyApp {
   fn update(&mut self, ctx: &egui::Context, _:&mut eframe::Frame) {
     egui::CentralPanel::default().show(ctx, |ui| {
       if ui.button("Scan").clicked() {
-        println!("presssed");
+        println!("presssed {}", self.name);
       };
     });
     return;
