@@ -22,7 +22,12 @@
           buildInputs = with pkgs; [
             clang
             llvmPackages.bintools
+            rust-analyzer
             rustup
+            wayland
+            libGL
+            libxkbcommon
+            xorg.libX11
           ];
 
           RUSTC_VERSION = overrides.toolchain.channel;
