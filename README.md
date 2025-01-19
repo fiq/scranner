@@ -13,7 +13,7 @@ To build and run the nix binary pkg:
 
 ## NixOS
 
-Swap out eth0 to your nic
+Swap out eth0 for your nic
 ```
 sudo -E nix run -- eth0
 ```
