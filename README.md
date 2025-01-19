@@ -13,8 +13,9 @@ To build and run the nix binary pkg:
 
 ## NixOS
 
+Swap out eth0 to your nic
 ```
-sudo -E nix run
+sudo -E nix run -- eth0
 ```
 
 ## Dev Env
@@ -26,7 +27,7 @@ nix develop
 
 To test as root (required for sniffing):
 ```
-sudo -E nix develop --command cargo run
+sudo -E nix develop --command cargo run -- <nic_name eg. eth0>
 ```
 
 ## Other Nix
