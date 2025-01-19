@@ -2,10 +2,10 @@ use eframe::egui;
 use egui::{RichText, Color32};
 use std::sync::{Arc, Mutex};
 use std::thread;
-use std::error::Error;
-
+//use std::error::Error;
+use std::env;
 mod scranner;
-
+const DEFAULT_NIC : &str = "enp7s0";
 fn main() -> Result<(), eframe::Error> {
     eframe::run_native(
         "Packet Sniffer",
@@ -17,6 +17,7 @@ fn main() -> Result<(), eframe::Error> {
 struct MyApp {
     packets: Arc<Mutex<Vec<scranner::PacketInfo>>>,
     is_scanning: Arc<Mutex<bool>>,
+    nic: String,
 }
 
 impl Default for MyApp {
@@ -24,6 +25,7 @@ impl Default for MyApp {
         Self {
             packets: Arc::new(Mutex::new(Vec::new())),
             is_scanning: Arc::new(Mutex::new(false)),
+            nic: get_nic()
         }
     }
 }
@@ -38,12 +40,12 @@ impl eframe::App for MyApp {
                 println!("cloning packets");
                 let packets = Arc::clone(&self.packets);
                 let is_scanning = Arc::clone(&self.is_scanning);
-
+                let nic_name = self.nic.clone();
                 // Start scanning in a separate thread
                 *is_scanning.lock().unwrap() = true;
                 thread::spawn(move || {
-                    println!("Spawned");
-                    if let Ok(captured_packets) = scranner::sniff("enp7s0".to_string(), 4) {
+                    println!("Spawned for {}", nic_name);
+                    if let Ok(captured_packets) = scranner::sniff(nic_name, 4) {
                         println!("post scanning");
                         for packet in captured_packets {
                             println!("packet captured");
@@ -74,6 +76,15 @@ impl eframe::App for MyApp {
 
         ctx.request_repaint();
     }
+}
+
+fn get_nic() -> String {
+  let args: Vec<String> = env::args().collect();
+  dbg!(&args);
+  if args.len() > 1 {
+    return args[1].clone();
+  }
+  return String::from(DEFAULT_NIC);
 }
 
 //, packet_info: & scranner::PacketInfo) {
