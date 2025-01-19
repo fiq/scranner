@@ -2,8 +2,9 @@ use pnet::datalink::Channel::Ethernet;
 use pnet::datalink::{self, NetworkInterface};
 use pnet::packet::ethernet::EthernetPacket;
 use std::error::Error;
-
+use chrono::{Utc, DateTime};
 pub struct PacketInfo {
+    pub date: DateTime<Utc>,
     pub src_ip: String,
     pub dst_ip: String,
     pub src_port: u16,
@@ -34,6 +35,7 @@ pub fn sniff(ifname: String, sample_size: i32) -> Result<Vec<PacketInfo>, Box<dy
             println!("Captured Ethernet packet: {:?}", eth_packet);
 
             packets.push(PacketInfo {
+                date: Utc::now(),
                 src_ip: eth_packet.get_source().to_string(),
                 dst_ip: eth_packet.get_destination().to_string(),
                 src_port: 0,

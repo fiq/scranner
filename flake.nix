@@ -28,6 +28,10 @@
             libGL
             libxkbcommon
             xorg.libX11
+            xorg.libxcb
+            xwayland
+            wayland
+            wayland-protocols
           ];
 
           RUSTC_VERSION = overrides.toolchain.channel;

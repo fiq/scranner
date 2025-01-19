@@ -1,6 +1,8 @@
 use eframe::egui;
+use egui::{RichText, Color32};
 use std::sync::{Arc, Mutex};
 use std::thread;
+use std::error::Error;
 
 mod scranner;
 
@@ -13,7 +15,7 @@ fn main() -> Result<(), eframe::Error> {
 }
 
 struct MyApp {
-    packets: Arc<Mutex<Vec<String>>>,
+    packets: Arc<Mutex<Vec<scranner::PacketInfo>>>,
     is_scanning: Arc<Mutex<bool>>,
 }
 
@@ -48,12 +50,7 @@ impl eframe::App for MyApp {
                             if !*is_scanning.lock().unwrap() {
                                 break;
                             }
-                            let packet_info = format!(
-                                "Src: {}:{} -> Dst: {}:{}",
-                                packet.src_ip, packet.src_port, packet.dst_ip, packet.dst_port
-                            );
-                            println!("Adding a packet {}", packet_info.to_string());
-                            packets.lock().unwrap().push(packet_info);
+                            packets.lock().unwrap().push(packet);
                         }
                     }
                 });
@@ -69,10 +66,7 @@ impl eframe::App for MyApp {
             ui.label("packets");
             egui::ScrollArea::vertical().show(ui, |ui| {
                 ui.label("packet area");
-                for packet in self.packets.lock().unwrap().iter().rev() {
-                    println!("Got a packet to render");
-                    ui.label(packet);
-                }
+                display_packets(self, ui);  
             });
             ui.separator();
         });
@@ -81,3 +75,24 @@ impl eframe::App for MyApp {
         ctx.request_repaint();
     }
 }
+
+//, packet_info: & scranner::PacketInfo) {
+fn display_packets(app: &mut MyApp, ui: &mut egui::Ui) {
+    egui::Grid::new("Packets").show(ui, |ui| {
+        for packet in app.packets.lock().unwrap().iter().rev() {
+            ui.label(RichText::new("date:").color(Color32::LIGHT_GRAY));
+            ui.label(RichText::new(format!("{}", packet.date)).color(Color32::DARK_GRAY));
+            ui.label(RichText::new("src:").color(Color32::LIGHT_GRAY));
+            ui.label(RichText::new(format!("{}", packet.src_ip)).color(Color32::DARK_GRAY));
+            ui.label(RichText::new("dst:").color(Color32::LIGHT_GRAY));
+            ui.label(RichText::new(format!("{}", packet.dst_ip)).color(Color32::DARK_GRAY));
+            ui.label(RichText::new("src port:").color(Color32::LIGHT_GRAY));
+            ui.label(RichText::new(format!("{}", packet.src_port)).color(Color32::DARK_GRAY));
+            ui.label(RichText::new("dst port:").color(Color32::LIGHT_GRAY));
+            ui.label(RichText::new(format!("{}", packet.dst_port)).color(Color32::DARK_GRAY));
+            ui.end_row();
+        }
+    });
+}
+
+
