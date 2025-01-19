@@ -2,7 +2,7 @@
 
 # DESCRIPTION
 
-A really ugly hobby sniffer which is still a WIP, and mostly a play around with Rust, pnet and Rust flakes. 
+A really ugly hobby packet sniffer which is still a WIP, and mostly a play around with Rust, pnet and Rust flakes. 
 At the time of writing the nic name is hard coded into main.rs
 
 
