@@ -5,8 +5,8 @@ use std::error::Error;
 use chrono::{Utc, DateTime};
 pub struct PacketInfo {
     pub date: DateTime<Utc>,
-    pub src_ip: String,
-    pub dst_ip: String,
+    pub src_mac: String,
+    pub dst_mac: String,
     pub src_port: u16,
     pub dst_port: u16,
 }
@@ -36,8 +36,8 @@ pub fn sniff(ifname: String, sample_size: i32) -> Result<Vec<PacketInfo>, Box<dy
 
             packets.push(PacketInfo {
                 date: Utc::now(),
-                src_ip: eth_packet.get_source().to_string(),
-                dst_ip: eth_packet.get_destination().to_string(),
+                src_mac: eth_packet.get_source().to_string(),
+                dst_mac: eth_packet.get_destination().to_string(),
                 src_port: 0,
                 dst_port: 0,
             });
