@@ -93,10 +93,14 @@ fn display_packets(app: &mut MyApp, ui: &mut egui::Ui) {
         for packet in app.packets.lock().unwrap().iter().rev() {
             ui.label(RichText::new("date:").color(Color32::LIGHT_GRAY));
             ui.label(RichText::new(format!("{}", packet.date)).color(Color32::DARK_GRAY));
-            ui.label(RichText::new("src:").color(Color32::LIGHT_GRAY));
+            ui.label(RichText::new("src mac:").color(Color32::LIGHT_GRAY));
             ui.label(RichText::new(format!("{}", packet.src_mac)).color(Color32::DARK_GRAY));
-            ui.label(RichText::new("dst:").color(Color32::LIGHT_GRAY));
+            ui.label(RichText::new("dst mac:").color(Color32::LIGHT_GRAY));
             ui.label(RichText::new(format!("{}", packet.dst_mac)).color(Color32::DARK_GRAY));
+            ui.label(RichText::new("src ip:").color(Color32::LIGHT_GRAY));
+            ui.label(RichText::new(format!("{}", packet.src_ip_v4)).color(Color32::DARK_GRAY));
+            ui.label(RichText::new("dst ip:").color(Color32::LIGHT_GRAY));
+            ui.label(RichText::new(format!("{}", packet.dst_ip_v4)).color(Color32::DARK_GRAY));
             ui.label(RichText::new("src port:").color(Color32::LIGHT_GRAY));
             ui.label(RichText::new(format!("{}", packet.src_port)).color(Color32::DARK_GRAY));
             ui.label(RichText::new("dst port:").color(Color32::LIGHT_GRAY));
